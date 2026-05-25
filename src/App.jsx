@@ -185,8 +185,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--canvas)] text-[var(--text)] transition-colors duration-500">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_0%,var(--glow),transparent_38%)]" />
+    <div className="paper-page min-h-screen bg-[var(--canvas)] text-[var(--text)] transition-colors duration-500">
+      <div className="paper-wash pointer-events-none fixed inset-0" />
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-10 pt-5 sm:px-7 lg:px-10">
         <Header
           date={new Date()}
@@ -205,7 +205,7 @@ export default function App() {
             />
           </aside>
 
-          <section className="notebook-panel flex flex-col rounded-[28px] p-4 sm:p-6">
+          <section className="notebook-panel ledger-panel flex flex-col rounded-[28px] p-4 sm:p-6">
             <DayNavigation
               selectedDate={selectedDate}
               today={today}
@@ -251,6 +251,10 @@ export default function App() {
             </div>
           </section>
         </main>
+
+        <footer className="planner-footer mt-8 text-center">
+          <p>&copy; {new Date().getFullYear()} Guilherme Fontes. Todos os direitos reservados.</p>
+        </footer>
       </div>
     </div>
   )
@@ -260,11 +264,11 @@ function Header({ date, theme, onThemeToggle }) {
   return (
     <header className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <div className="flex size-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent-shadow)]">
+        <div className="brand-mark flex size-11 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent-shadow)]">
           <CalendarDays size={21} strokeWidth={1.9} />
         </div>
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.27em] text-[var(--muted)]">
+          <p className="brand-name text-[11px] font-semibold uppercase tracking-[0.27em] text-[var(--muted)]">
             NoteDay
           </p>
           <h1 className="text-sm font-medium sm:text-base">{capitalize(formatFullDate(date))}</h1>
@@ -298,7 +302,7 @@ function TaskComposer({ selectedDate, onAdd }) {
   return (
     <form className="notebook-panel rounded-[28px] p-5 sm:p-6" onSubmit={submit}>
       <p className="eyebrow">Novo item</p>
-      <h2 className="mt-2 text-xl font-semibold tracking-tight">Planeje seu foco</h2>
+      <h2 className="planner-title mt-2 text-xl font-semibold tracking-tight">Planeje seu foco</h2>
       <label className="field mt-6">
         <span>Tarefa ou compromisso</span>
         <input
@@ -344,7 +348,7 @@ function DailyOverview({ pending, active, completed, focusedTime }) {
         <Metric number={active} label="Ativas" emphasis />
         <Metric number={completed} label="Feitas" />
       </div>
-      <div className="mt-5 flex items-center justify-between rounded-2xl bg-[var(--subtle)] p-4">
+      <div className="focus-strip mt-5 flex items-center justify-between rounded-2xl bg-[var(--subtle)] p-4">
         <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
           <Timer size={16} />
           Tempo concluído
@@ -357,7 +361,7 @@ function DailyOverview({ pending, active, completed, focusedTime }) {
 
 function Metric({ number, label, emphasis }) {
   return (
-    <div className={`rounded-2xl px-2 py-3 text-center ${emphasis ? 'bg-[var(--accent-soft)]' : 'bg-[var(--subtle)]'}`}>
+    <div className={`metric-tile rounded-2xl px-2 py-3 text-center ${emphasis ? 'bg-[var(--accent-soft)]' : 'bg-[var(--subtle)]'}`}>
       <p className="text-xl font-semibold">{number}</p>
       <p className="mt-1 text-[11px] text-[var(--muted)]">{label}</p>
     </div>
@@ -369,7 +373,7 @@ function DayNavigation({ selectedDate, today, onPrevious, onNext, onToday }) {
     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
       <div>
         <p className="eyebrow">{selectedDate === today ? 'Hoje' : 'Agenda diária'}</p>
-        <h2 className="mt-2 text-2xl font-semibold capitalize tracking-tight">{formatDay(selectedDate)}</h2>
+        <h2 className="planner-title mt-2 text-2xl font-semibold capitalize tracking-tight">{formatDay(selectedDate)}</h2>
       </div>
       <div className="flex items-center gap-2">
         {selectedDate !== today && (
@@ -394,12 +398,12 @@ function TaskSection({ title, status, tasks, now, emptyText, onStart, onFinish, 
       <div className="mb-3 flex items-center gap-3">
         <span className={`status-dot status-dot-${status}`} />
         <h3 className="text-sm font-semibold">{title}</h3>
-        <span className="rounded-full bg-[var(--subtle)] px-2 py-0.5 text-xs text-[var(--muted)]">
+        <span className="section-count rounded-full bg-[var(--subtle)] px-2 py-0.5 text-xs text-[var(--muted)]">
           {tasks.length}
         </span>
       </div>
       {tasks.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[var(--line)] px-5 py-5 text-sm text-[var(--muted)]">
+        <div className="empty-page rounded-2xl border border-dashed border-[var(--line)] px-5 py-5 text-sm text-[var(--muted)]">
           {emptyText}
         </div>
       ) : (
@@ -429,7 +433,7 @@ function TaskCard({ task, now, onStart, onFinish, onComplete, onRemove }) {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           {task.time && (
-            <span className="inline-flex items-center gap-1 rounded-lg bg-[var(--subtle)] px-2 py-1 text-xs font-medium text-[var(--muted)]">
+            <span className="time-chip inline-flex items-center gap-1 rounded-lg bg-[var(--subtle)] px-2 py-1 text-xs font-medium text-[var(--muted)]">
               <Clock3 size={12} />
               {task.time}
             </span>
@@ -437,7 +441,7 @@ function TaskCard({ task, now, onStart, onFinish, onComplete, onRemove }) {
           {isActive && <span className="active-chip">Em execução</span>}
           {isComplete && <CircleCheckBig size={16} className="text-[var(--success)]" />}
         </div>
-        <h4 className={`mt-2 font-medium ${isComplete ? 'text-[var(--muted)] line-through decoration-[var(--line)]' : ''}`}>
+        <h4 className={`task-title mt-2 font-medium ${isComplete ? 'text-[var(--muted)] line-through decoration-[var(--line)]' : ''}`}>
           {task.title}
         </h4>
         {task.notes && <p className="mt-1 text-sm text-[var(--muted)]">{task.notes}</p>}

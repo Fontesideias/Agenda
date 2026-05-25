@@ -2,38 +2,44 @@
 
 :root {
   color-scheme: light;
-  --canvas: #f7f5f0;
-  --panel: rgba(255, 254, 252, 0.86);
-  --text: #22231f;
-  --muted: #797b73;
-  --line: #e8e3d9;
-  --subtle: #f3f0e8;
-  --accent: #343c35;
-  --accent-soft: #e7ece6;
-  --accent-shadow: rgba(39, 46, 39, 0.2);
-  --glow: rgba(213, 201, 174, 0.3);
-  --success: #56876a;
-  --active: #c38b3d;
-  --card: #fffefa;
-  --field: #faf8f3;
+  --canvas: #eee5cf;
+  --panel: rgba(250, 244, 226, 0.94);
+  --text: #3c3427;
+  --muted: #766a55;
+  --line: #d7c8aa;
+  --rule: rgba(123, 110, 80, 0.105);
+  --subtle: #ece2c7;
+  --accent: #627147;
+  --accent-soft: #dce0bf;
+  --accent-shadow: rgba(83, 91, 54, 0.22);
+  --glow: rgba(188, 113, 69, 0.18);
+  --success: #657b4b;
+  --active: #be724d;
+  --terracotta-soft: #f0d5bd;
+  --card: #fbf5e4;
+  --field: #f5ecd5;
+  --shadow: rgba(66, 50, 32, 0.1);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --canvas: #111412;
-  --panel: rgba(25, 29, 26, 0.88);
-  --text: #f4f1e9;
-  --muted: #969b92;
-  --line: #2d332e;
-  --subtle: #202520;
-  --accent: #d8ddd1;
-  --accent-soft: #29332b;
-  --accent-shadow: rgba(226, 229, 218, 0.09);
-  --glow: rgba(92, 104, 81, 0.2);
-  --success: #8ab49b;
-  --active: #e2ac5e;
-  --card: #1b1f1c;
-  --field: #181c19;
+  --canvas: #26251f;
+  --panel: rgba(48, 45, 36, 0.94);
+  --text: #f0e5cd;
+  --muted: #b0a38b;
+  --line: #534c3b;
+  --rule: rgba(218, 199, 161, 0.07);
+  --subtle: #393629;
+  --accent: #9fab70;
+  --accent-soft: #454b32;
+  --accent-shadow: rgba(10, 10, 8, 0.24);
+  --glow: rgba(173, 94, 57, 0.14);
+  --success: #a8b87a;
+  --active: #df8c62;
+  --terracotta-soft: #553b2e;
+  --card: #353228;
+  --field: #312e25;
+  --shadow: rgba(0, 0, 0, 0.22);
 }
 
 * {
@@ -41,13 +47,37 @@
 }
 
 html {
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   -webkit-font-smoothing: antialiased;
+}
+
+.paper-page {
+  position: relative;
+}
+
+.paper-page::before {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(74, 61, 39, 0.13) 0.6px, transparent 0.7px),
+    radial-gradient(circle at 70% 52%, rgba(120, 89, 48, 0.12) 0.6px, transparent 0.8px);
+  background-size: 5px 5px, 7px 7px;
+  mix-blend-mode: multiply;
+}
+
+.paper-wash {
+  background:
+    radial-gradient(circle at 12% 0%, var(--glow), transparent 38%),
+    radial-gradient(circle at 94% 8%, rgba(98, 113, 71, 0.13), transparent 31%);
 }
 
 button {
@@ -57,19 +87,60 @@ button {
 .notebook-panel {
   border: 1px solid var(--line);
   background: var(--panel);
-  box-shadow: 0 16px 42px rgba(30, 31, 27, 0.045);
-  backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 0 rgba(255, 249, 232, 0.72) inset,
+    0 12px 32px var(--shadow);
+  backdrop-filter: blur(4px);
 }
 
 :root[data-theme="dark"] .notebook-panel {
-  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 46px var(--shadow);
+}
+
+.ledger-panel {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 42px,
+    var(--rule) 43px,
+    transparent 44px
+  );
+}
+
+.brand-mark {
+  border: 1px solid color-mix(in srgb, var(--accent) 76%, #332b20);
+  border-radius: 13px;
+}
+
+.brand-name {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
 }
 
 .eyebrow {
-  color: var(--muted);
+  color: var(--active);
   font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.planner-title {
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", serif;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: -0.02em;
+}
+
+.planner-footer {
+  border-top: 1px dashed var(--line);
+  color: var(--muted);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12px;
+  letter-spacing: 0.09em;
+  padding-top: 22px;
   text-transform: uppercase;
 }
 
@@ -88,8 +159,8 @@ button {
 .field input,
 .field textarea {
   width: 100%;
-  border: 1px solid transparent;
-  border-radius: 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
   outline: none;
   background: var(--field);
   color: var(--text);
@@ -103,7 +174,7 @@ button {
 .field input:focus,
 .field textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-soft) 75%, transparent);
 }
 
 .primary-button,
@@ -120,11 +191,12 @@ button {
 
 .primary-button {
   gap: 8px;
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--accent);
   color: var(--canvas);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   padding: 12px 18px;
 }
 
@@ -135,7 +207,7 @@ button {
 
 .secondary-button {
   border-color: var(--line);
-  border-radius: 12px;
+  border-radius: 9px;
   color: var(--muted);
   font-weight: 500;
   height: 40px;
@@ -151,8 +223,18 @@ button {
 
 .icon-button {
   border-color: var(--line);
-  border-radius: 13px;
+  border-radius: 9px;
   color: var(--muted);
+}
+
+.metric-tile {
+  border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+  border-radius: 11px;
+}
+
+.focus-strip {
+  border: 1px dashed color-mix(in srgb, var(--line) 92%, transparent);
+  border-radius: 12px;
 }
 
 .status-dot {
@@ -168,7 +250,7 @@ button {
 }
 
 .status-dot-pending {
-  background: var(--muted);
+  background: #9b8763;
 }
 
 .status-dot-completed {
@@ -179,29 +261,45 @@ button {
   align-items: center;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 12px;
   display: flex;
   gap: 18px;
-  padding: 16px;
+  padding: 15px 16px;
   transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
 .task-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(25, 29, 25, 0.045);
+  box-shadow: 0 8px 20px var(--shadow);
 }
 
 .task-active {
   border-color: color-mix(in srgb, var(--active) 35%, var(--line));
+  box-shadow: 3px 0 0 var(--active) inset;
 }
 
 .task-complete {
   background: color-mix(in srgb, var(--card) 85%, var(--success) 3%);
 }
 
+.time-chip,
+.section-count {
+  border: 1px solid color-mix(in srgb, var(--line) 68%, transparent);
+}
+
+.task-title {
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: -0.01em;
+}
+
+.empty-page {
+  background: color-mix(in srgb, var(--card) 58%, transparent);
+}
+
 .active-chip {
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--active) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--active) 26%, transparent);
+  border-radius: 6px;
+  background: var(--terracotta-soft);
   color: var(--active);
   font-size: 11px;
   font-weight: 600;
@@ -209,7 +307,7 @@ button {
 }
 
 .action-button {
-  border-radius: 11px;
+  border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   gap: 6px;
@@ -236,7 +334,7 @@ button {
 }
 
 .delete-button {
-  border-radius: 10px;
+  border-radius: 8px;
   color: var(--muted);
   height: 36px;
   width: 36px;

@@ -181,6 +181,7 @@ button {
 .secondary-button,
 .action-button,
 .icon-button,
+.sort-button,
 .delete-button {
   align-items: center;
   border: 1px solid transparent;
@@ -340,6 +341,35 @@ button {
   width: 36px;
 }
 
+.sort-controls {
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+  border-radius: 8px;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sort-button {
+  color: var(--muted);
+  height: 18px;
+  width: 30px;
+}
+
+.sort-button + .sort-button {
+  border-top: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+}
+
+.sort-button:hover:not(:disabled) {
+  background: var(--subtle);
+  color: var(--text);
+}
+
+.sort-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
 .delete-button:hover {
   background: color-mix(in srgb, #bc635f 12%, transparent);
   color: #bc635f;
@@ -355,5 +385,19 @@ button {
   .task-card > div:last-child {
     align-self: stretch;
     justify-content: flex-end;
+  }
+
+  .sort-controls {
+    flex-direction: row;
+    margin-right: auto;
+  }
+
+  .sort-button {
+    height: 36px;
+  }
+
+  .sort-button + .sort-button {
+    border-left: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+    border-top: 0;
   }
 }

@@ -24,6 +24,8 @@ function Icon({ children, size = 24, fill = 'none', ...props }) {
 
 const ArrowLeft = (props) => <Icon {...props}><path d="m15 18-6-6 6-6" /><path d="M9 12h11" /></Icon>
 const ArrowRight = (props) => <Icon {...props}><path d="m9 18 6-6-6-6" /><path d="M4 12h11" /></Icon>
+const ArrowUp = (props) => <Icon {...props}><path d="m18 15-6-6-6 6" /></Icon>
+const ArrowDown = (props) => <Icon {...props}><path d="m6 9 6 6 6-6" /></Icon>
 const CalendarDays = (props) => <Icon {...props}><path d="M8 2v4" /><path d="M16 2v4" /><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M3 10h18" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /></Icon>
 const Check = (props) => <Icon {...props}><path d="m5 12 5 5L20 7" /></Icon>
 const CircleCheckBig = (props) => <Icon {...props}><path d="M21.8 10A10 10 0 1 1 17 3.3" /><path d="m9 11 3 3L22 4" /></Icon>
@@ -158,7 +160,7 @@ export default function App() {
       endedAt: null,
       createdAt: Date.now(),
     }
-    setTasks((current) => [task, ...current])
+    setTasks((current) => [...current, task])
     setSelectedDate(values.date)
   }
 
@@ -182,6 +184,30 @@ export default function App() {
 
   function removeTask(id) {
     setTasks((current) => current.filter((task) => task.id !== id))
+  }
+
+  function moveTask(id, direction) {
+    setTasks((current) => {
+      const target = current.find((task) => task.id === id)
+      if (!target) return current
+
+      const siblings = current.filter(
+        (task) => task.date === target.date && task.status === target.status,
+      )
+      const position = siblings.findIndex((task) => task.id === id)
+      const destination = direction === 'up' ? position - 1 : position + 1
+      if (destination < 0 || destination >= siblings.length) return current
+
+      const neighborId = siblings[destination].id
+      const targetIndex = current.findIndex((task) => task.id === id)
+      const neighborIndex = current.findIndex((task) => task.id === neighborId)
+      const reordered = [...current]
+      ;[reordered[targetIndex], reordered[neighborIndex]] = [
+        reordered[neighborIndex],
+        reordered[targetIndex],
+      ]
+      return reordered
+    })
   }
 
   return (
@@ -225,6 +251,7 @@ export default function App() {
                 onFinish={finishTask}
                 onComplete={completeWithoutTimer}
                 onRemove={removeTask}
+                onMove={moveTask}
               />
               <TaskSection
                 title="Pendentes"
@@ -236,6 +263,7 @@ export default function App() {
                 onFinish={finishTask}
                 onComplete={completeWithoutTimer}
                 onRemove={removeTask}
+                onMove={moveTask}
               />
               <TaskSection
                 title="Concluídas"
@@ -247,6 +275,7 @@ export default function App() {
                 onFinish={finishTask}
                 onComplete={completeWithoutTimer}
                 onRemove={removeTask}
+                onMove={moveTask}
               />
             </div>
           </section>
@@ -392,7 +421,7 @@ function DayNavigation({ selectedDate, today, onPrevious, onNext, onToday }) {
   )
 }
 
-function TaskSection({ title, status, tasks, now, emptyText, onStart, onFinish, onComplete, onRemove }) {
+function TaskSection({ title, status, tasks, now, emptyText, onStart, onFinish, onComplete, onRemove, onMove }) {
   return (
     <div>
       <div className="mb-3 flex items-center gap-3">
@@ -408,15 +437,18 @@ function TaskSection({ title, status, tasks, now, emptyText, onStart, onFinish, 
         </div>
       ) : (
         <div className="space-y-3">
-          {tasks.map((task) => (
+          {tasks.map((task, index) => (
             <TaskCard
               key={task.id}
               task={task}
               now={now}
+              canMoveUp={index > 0}
+              canMoveDown={index < tasks.length - 1}
               onStart={onStart}
               onFinish={onFinish}
               onComplete={onComplete}
               onRemove={onRemove}
+              onMove={onMove}
             />
           ))}
         </div>
@@ -425,7 +457,7 @@ function TaskSection({ title, status, tasks, now, emptyText, onStart, onFinish, 
   )
 }
 
-function TaskCard({ task, now, onStart, onFinish, onComplete, onRemove }) {
+function TaskCard({ task, now, canMoveUp, canMoveDown, onStart, onFinish, onComplete, onRemove, onMove }) {
   const isActive = task.status === 'active'
   const isComplete = task.status === 'completed'
   return (
@@ -456,6 +488,28 @@ function TaskCard({ task, now, onStart, onFinish, onComplete, onRemove }) {
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-2">
+        <div className="sort-controls" aria-label="Reordenar tarefa">
+          <button
+            className="sort-button"
+            type="button"
+            disabled={!canMoveUp}
+            aria-label="Mover tarefa para cima"
+            title="Mover para cima"
+            onClick={() => onMove(task.id, 'up')}
+          >
+            <ArrowUp size={14} />
+          </button>
+          <button
+            className="sort-button"
+            type="button"
+            disabled={!canMoveDown}
+            aria-label="Mover tarefa para baixo"
+            title="Mover para baixo"
+            onClick={() => onMove(task.id, 'down')}
+          >
+            <ArrowDown size={14} />
+          </button>
+        </div>
         {task.status === 'pending' && (
           <>
             <button className="action-button action-start" type="button" onClick={() => onStart(task.id)} title="Iniciar tarefa">
